@@ -23,33 +23,6 @@ namespace llg_csharp
         }
     }
 
-    class Stack
-    {
-        private byte[] Data;
-        public byte Length { get; private set; }
-
-        public Stack(byte capacity)
-        {
-            Data = new byte[capacity];
-            Length = 0;
-        }
-
-        public void Push(byte value)
-        {
-            Data[Length++] = value;
-        }
-
-        public void Pop()
-        {
-            --Length;
-        }
-
-        public List<byte> ToList()
-        {
-            return Data.Take(Length).ToList();
-        }
-    }
-
     class PathFinder
     {
         private List<string> Dic;
@@ -64,7 +37,7 @@ namespace llg_csharp
         {
             Init(dic);
 
-            Find(dic.Count, new Stack((byte)dic.Count));
+            Find(dic.Count, new byte[dic.Count], 0);
 
             var result = Result.Select(i => dic[i]).ToList();
             return result;
@@ -85,7 +58,7 @@ namespace llg_csharp
             Visited[index] = false;
         }
 
-        private Stack Find(int currentIndex, Stack rest)
+        private byte[] Find(int currentIndex, byte[] rest, int depth)
         {
             var list = Lookup[currentIndex];
             for (var i = 0; i < list.Length; ++i)
@@ -99,17 +72,15 @@ namespace llg_csharp
 
                 Visit(nextIndex);
 
-                rest.Push(nextIndex);
-                var candidate = Find(nextIndex, rest);
+                rest[depth] = nextIndex;
+                var candidate = Find(nextIndex, rest, depth + 1);
 
                 Exit(nextIndex);
 
-                if (candidate.Length > Result.Count)
+                if (depth + 1 > Result.Count)
                 {
-                    Result = candidate.ToList();
+                    Result = candidate.Take(depth + 1).ToList();
                 }
-
-                rest.Pop();
             }
 
             return rest;
