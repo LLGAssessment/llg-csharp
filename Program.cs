@@ -29,40 +29,60 @@ namespace llg_csharp
 
         private List<List<int>> Lookup;
 
-        private HashSet<int> Visited;
+        private List<bool> Visited;
 
-        private List<string> Result;
+        private List<int> Result;
 
         public List<string> FindLongest(List<string> dic)
         {
             Init(dic);
 
-            Find(dic.Count, new List<string>(dic.Count));
-            return Result;
+            Find(dic.Count, new Stack<int>(dic.Count));
+
+            var result = Enumerable.Reverse(Result).Select(i => dic[i]).ToList();
+            return result;
         }
 
-        private List<string> Find(int currentIndex, List<string> rest)
+        private bool IsVisited(int index)
         {
-            foreach(var nextIndex in Lookup[currentIndex])
+            return Visited[index];
+        }
+
+        private void Visit(int index)
+        {
+            Visited[index] = true;
+        }
+
+        private void Exit(int index)
+        {
+            Visited[index] = false;
+        }
+
+        private Stack<int> Find(int currentIndex, Stack<int> rest)
+        {
+            var list = Lookup[currentIndex];
+            for (var i = 0; i < list.Count; ++i)
             {
-                if (Visited.Contains(nextIndex))
+                var nextIndex = list[i];
+
+                if (IsVisited(nextIndex))
                 {
                     continue;
                 }
 
-                Visited.Add(nextIndex);
+                Visit(nextIndex);
 
-                rest.Add(Dic[nextIndex]);
+                rest.Push(nextIndex);
                 var candidate = Find(nextIndex, rest);
 
-                Visited.Remove(nextIndex);
+                Exit(nextIndex);
 
                 if (candidate.Count > Result.Count)
                 {
-                    Result = new List<string>(candidate);
+                    Result = new List<int>(candidate);
                 }
 
-                rest.RemoveAt(rest.Count - 1);
+                rest.Pop();
             }
 
             return rest;
@@ -92,9 +112,9 @@ namespace llg_csharp
 
             Lookup.Add(Enumerable.Range(0, dic.Count - 1).ToList());
 
-            Visited = new HashSet<int>();
+            Visited = Enumerable.Repeat<bool>(false, dic.Count).ToList();
 
-            Result = new List<string>();
+            Result = new List<int>();
         }
     }
 }
