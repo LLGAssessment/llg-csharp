@@ -12,6 +12,7 @@ Then build
 
 ```bash
 cd llg-csharp
+dotnet restore
 dotnet build -c Release
 ```
 
