@@ -66,7 +66,7 @@ namespace llg_csharp
 
             Find(dic.Count, new Stack((byte)dic.Count));
 
-            var result = Enumerable.Reverse(Result).Select(i => dic[i]).ToList();
+            var result = Result.Select(i => dic[i]).ToList();
             return result;
         }
 
