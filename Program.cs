@@ -76,12 +76,12 @@ namespace llg_csharp
             for (var io = 0; io < dic.Count; ++io)
             {
                 var wo = dic[io];
-                Lookup.Add(new List<int>());
+                var lastCharacter = wo[wo.Length - 1];
+                Lookup.Add(new List<int>(dic.Count));
 
                 for (var ii = 0; ii < dic.Count; ++ii)
                 {
                     var wi = dic[ii];
-                    var lastCharacter = wo[wo.Length - 1];
 
                     if (lastCharacter == wi[0] && wo != wi)
                     {
