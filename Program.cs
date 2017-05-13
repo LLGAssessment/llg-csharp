@@ -23,21 +23,48 @@ namespace llg_csharp
         }
     }
 
+    class Stack
+    {
+        private byte[] Data;
+        public byte Length { get; private set; }
+
+        public Stack(byte capacity)
+        {
+            Data = new byte[capacity];
+            Length = 0;
+        }
+
+        public void Push(byte value)
+        {
+            Data[Length++] = value;
+        }
+
+        public void Pop()
+        {
+            --Length;
+        }
+
+        public List<byte> ToList()
+        {
+            return Data.Take(Length).ToList();
+        }
+    }
+
     class PathFinder
     {
         private List<string> Dic;
 
-        private List<List<int>> Lookup;
+        private byte[][] Lookup;
 
         private List<bool> Visited;
 
-        private List<int> Result;
+        private List<byte> Result;
 
         public List<string> FindLongest(List<string> dic)
         {
             Init(dic);
 
-            Find(dic.Count, new Stack<int>(dic.Count));
+            Find(dic.Count, new Stack((byte)dic.Count));
 
             var result = Enumerable.Reverse(Result).Select(i => dic[i]).ToList();
             return result;
@@ -58,10 +85,10 @@ namespace llg_csharp
             Visited[index] = false;
         }
 
-        private Stack<int> Find(int currentIndex, Stack<int> rest)
+        private Stack Find(int currentIndex, Stack rest)
         {
             var list = Lookup[currentIndex];
-            for (var i = 0; i < list.Count; ++i)
+            for (var i = 0; i < list.Length; ++i)
             {
                 var nextIndex = list[i];
 
@@ -77,9 +104,9 @@ namespace llg_csharp
 
                 Exit(nextIndex);
 
-                if (candidate.Count > Result.Count)
+                if (candidate.Length > Result.Count)
                 {
-                    Result = new List<int>(candidate);
+                    Result = candidate.ToList();
                 }
 
                 rest.Pop();
@@ -91,30 +118,32 @@ namespace llg_csharp
         private void Init(List<string> dic)
         {
             Dic = new List<string>(dic);
-            Lookup = new List<List<int>>(dic.Count);
+            Lookup = new byte[dic.Count + 1][];
 
             for (var io = 0; io < dic.Count; ++io)
             {
                 var wo = dic[io];
                 var lastCharacter = wo[wo.Length - 1];
-                Lookup.Add(new List<int>(dic.Count));
 
+                var entries = new List<byte>(dic.Count);
                 for (var ii = 0; ii < dic.Count; ++ii)
                 {
                     var wi = dic[ii];
 
                     if (lastCharacter == wi[0] && wo != wi)
                     {
-                        Lookup[io].Add(ii);
+                        entries.Add((byte)ii);
                     }
                 }
+
+                Lookup[io] = entries.ToArray();
             }
 
-            Lookup.Add(Enumerable.Range(0, dic.Count - 1).ToList());
+            Lookup[dic.Count] = Enumerable.Range(0, dic.Count - 1).Select(v => (byte)v).ToArray();
 
             Visited = Enumerable.Repeat<bool>(false, dic.Count).ToList();
 
-            Result = new List<int>();
+            Result = new List<byte>();
         }
     }
 }
