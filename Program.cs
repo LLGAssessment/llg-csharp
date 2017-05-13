@@ -3,22 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 
-namespace llg_dotnetcore
+namespace llg_csharp
 {
     class Program
     {
         static void Main(string[] args)
         {
-            // var dic = new List<string>(File.ReadAllLines("llg-dataset/70pokemons.txt"));
-
             var dic = new List<string>();
             string s;
             while ((s = Console.ReadLine()) != null)
             {
                 dic.Add(s);
             }
-
-            // Console.WriteLine(dic.Count);
 
             var pathFinder = new PathFinder();
             var result = pathFinder.FindLongest(dic);
