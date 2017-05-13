@@ -56,7 +56,7 @@ namespace llg_csharp
 
         private byte[][] Lookup;
 
-        private List<bool> Visited;
+        private bool[] Visited;
 
         private List<byte> Result;
 
@@ -141,7 +141,7 @@ namespace llg_csharp
 
             Lookup[dic.Count] = Enumerable.Range(0, dic.Count - 1).Select(v => (byte)v).ToArray();
 
-            Visited = Enumerable.Repeat<bool>(false, dic.Count).ToList();
+            Visited = new bool[dic.Count];
 
             Result = new List<byte>();
         }
