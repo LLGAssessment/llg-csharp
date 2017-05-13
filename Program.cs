@@ -37,7 +37,7 @@ namespace llg_csharp
         {
             Init(dic);
 
-            Find(dic.Count, new List<string>());
+            Find(dic.Count, new List<string>(dic.Count));
             return Result;
         }
 
