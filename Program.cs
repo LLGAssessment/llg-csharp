@@ -117,7 +117,7 @@ namespace llg_csharp
 
         private void Init(List<string> dic)
         {
-            Dic = new List<string>(dic);
+            Dic = dic;
             Lookup = new byte[dic.Count + 1][];
 
             for (var io = 0; io < dic.Count; ++io)
